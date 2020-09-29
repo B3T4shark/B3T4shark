@@ -1,5 +1,3 @@
-# [HCMUS-CTF 2020](https://ctf.hcmus.edu.vn/)
-
 ## ⚡ [HandShake](https://ctf.hcmus.edu.vn/challenges#HandShake)
 
 [![df](https://img.shields.io/badge/B3T4-shark-brightgreen.svg)](https://img.shields.io/badge/B3T4-shark-brightgreen.svg)
@@ -102,7 +100,5 @@ for i in range(10000, 100000):
 
 📫 Flag: **`HCMUS-CTF{}`**
 
-
-
-
-
+---
+*[Back to table of contents](../README.md)*

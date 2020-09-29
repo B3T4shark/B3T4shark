@@ -4,8 +4,10 @@
 
 ## WriteUps Category
 
-[Forensisc](forensics/README.md)
+[Forensics](forensics/README.md)
 
 [Pwn](pwn/README.md)
 
+---
+*[Back to CTF write ups references](../README.md)*
 

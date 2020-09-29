@@ -1,5 +1,3 @@
-# [HCMUS-CTF 2020](https://ctf.hcmus.edu.vn/)
-
 ## ⚡ [HackMe](https://ctf.hcmus.edu.vn/challenges#HackMe)
 
 [![df](https://img.shields.io/badge/B3T4-shark-brightgreen.svg)](https://img.shields.io/badge/B3T4-shark-brightgreen.svg)
@@ -10,7 +8,7 @@ Tác giả: `pakkunandy`
 
 
 
-Tags: `pwn` `bof` | `stack` `variable` | `ret2text`
+Tags: `pwn` `bof`  `stack` `variable`  `ret2text`
 
 <!--
 ### Challenge Description
@@ -226,3 +224,6 @@ p.interactive()
 
 
 📫 Flag: **`HCMUS-CTF{}`**
+
+---
+*[Back to table of contents](../README.md)*

@@ -1,34 +1,33 @@
-## ⚡ [SimpleBOF](https://ctf.hcmus.edu.vn/challenges#SimpleBOF)
+## ⚡ [FindMe](https://ctf.hcmus.edu.vn/challenges#FindMe)
 
 [![df](https://img.shields.io/badge/B3T4-shark-brightgreen.svg)](https://img.shields.io/badge/B3T4-shark-brightgreen.svg)
 [![df](https://img.shields.io/badge/member-viplazy-brightgreen.svg)](https://img.shields.io/badge/member-viplazy-brightgreen.svg)
-[![df](https://img.shields.io/badge/50-pts-brightgreen.svg)](https://img.shields.io/badge/50-pts-brightgreen.svg)
+[![df](https://img.shields.io/badge/108-pts-brightgreen.svg)](https://img.shields.io/badge/108-pts-brightgreen.svg)
 
 Tác giả: `pakkunandy`
 
 
-
-Tags: `pwn` `bof` `ret2text`
+Tags: `pwn` `bof` `rand` `ret2syscall`
 
 <!--
 ### Challenge Description
 -->
 
 ### Summary
-
-Đây là challenge cơ bản nhất về buffer overflow.
+<!--
+Đây là challenge về buffer overflow.
 
 Đầu tiên, kiểm tra thông tin binary:
 
 ```bash
-$ checksec SimpleBOF
-    Arch:     i386-32-little
+$ checksec findme
+    Arch:     amd64-64-little
     RELRO:    Partial RELRO
     Stack:    No canary found
     NX:       NX enabled
-    PIE:      No PIE (0x8048000)
+    PIE:      No PIE (0x400000)
 ```
-Chương trình này chạy trên nhân x86, đã tắt hầu hết các bảo vệ.
+Chương trình này chạy trên nhân x64, đã tắt hầu hết các bảo vệ.
 
 Mở chương trình với **IDA**, ta kiểm tra hàm **main**:
 
@@ -121,7 +120,7 @@ payload = 'A'*offset + p32(success_addr)
 p.sendline(payload)
 p.interactive()
 ```
-
+-->
 
 📫 Flag: **`HCMUS-CTF{}`**
 

@@ -1,0 +1,1 @@
+HCMUS-CTF{local_dummy_flag}
