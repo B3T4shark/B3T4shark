@@ -10,14 +10,14 @@ Tác giả: `pakkunandy`
 
 Tags: `pwn` `shell`
 
-<!--
+
 ### Challenge Description
--->
+
+Give us your arguments, we'll give you the result!
 
 ### Summary
 
-Challenge này yêu cầu ta lấy được môi trường thực thi trên server.
-
+Challenge này yêu cầu ta lấy được môi trường thực thi trên server.  
 Đầu tiên, kiểm tra thông tin binary:
 
 ```bash

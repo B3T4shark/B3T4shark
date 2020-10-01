@@ -127,7 +127,7 @@ Ta sẽ chạy cả 2 cách trên tại đây!
 
     Thành công, ta chạy trên server và lấy flag thôi!
 
-### Exploit #2 Funtion argument
+### Exploit #2 Funtion arguments
 
 Chi tiết về phương pháp này sẽ được trình bày ở [ChampionLeague]("../ChampionLeague/README.md") challenge.
 
