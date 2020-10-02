@@ -8,6 +8,15 @@
 
 [Pwn](pwn/README.md)
 
+[Cryptography](cryptography/README.md)
+
+[Misc](misc/README.md)
+
+[Web Exploitation](web_exploitation/README.md)
+
+[Reversing](reversing/README.md)
+
+
 ---
 *[Back to CTF write ups references](../README.md)*
 

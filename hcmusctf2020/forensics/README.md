@@ -6,6 +6,10 @@
 
 [HandShake](HandShake/README.md)
 
+[OooRooCoo](OooRooCoo/README.md)
+
+[RecoverMe](RecoverMe/README.md)
+
 ---
 *[Back to category](../README.md)*
 
