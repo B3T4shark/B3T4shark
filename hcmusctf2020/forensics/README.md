@@ -6,6 +6,8 @@
 
 [HandShake](HandShake/README.md)
 
+[Puzzle](Puzzle/README.md)
+
 ---
 *[Back to category](../README.md)*
 
