@@ -10,15 +10,15 @@
 
 [Cryptography](cryptography/README.md)
 
-[MISC](misc/README.md)
-
 [OSINT](osint/README.md)
 
 [Programming](programming/README.md)
 
 [Reversing](reversing/README.md)
 
-[Web Exploitation](web_exploitation/Math/README.md)
+[Misc](misc/README.md)
+
+[Web Exploitation](web_exploitation/README.md)
 
 ---
 *[Back to CTF write ups references](../README.md)*
