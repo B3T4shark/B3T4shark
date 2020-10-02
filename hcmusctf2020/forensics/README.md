@@ -6,6 +6,8 @@
 
 [HandShake](HandShake/README.md)
 
+[Puzzle](Puzzle/README.md)
+
 [OooRooCoo](OooRooCoo/README.md)
 
 [RecoverMe](RecoverMe/README.md)

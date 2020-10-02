@@ -4,8 +4,10 @@
 
 ## Table of Content
 
-[Aliens](Aliens/README.md)
 
+[NoobEncoding](NoobEncoding/README.md)
+
+[Aliens](Aliens/README.md)
 
 ---
 *[Back to category](../README.md)*
