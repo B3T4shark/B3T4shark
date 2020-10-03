@@ -6,6 +6,8 @@
 
 [Pluzz](Pluzz/README.md)
 
+[Email](Email/README.md)
+
 ---
 *[Back to category](../README.md)*
 
